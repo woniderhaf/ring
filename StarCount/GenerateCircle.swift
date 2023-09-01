@@ -32,7 +32,7 @@ class RedCircle {
       //6. Задаём цвет и делаем обрезку
       newView.layer.cornerRadius = rectSideSize/2
       newView.layer.masksToBounds = true
-      newView.backgroundColor = #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
+      newView.backgroundColor = #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1)
       
       //7. Добавляем в массив
       viewsArray.append(newView)
