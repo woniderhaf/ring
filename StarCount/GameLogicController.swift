@@ -1,49 +1,43 @@
-/// Copyright (c) 2021 Razeware LLC
-/// 
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-/// 
-/// The above copyright notice and this permission notice shall be included in
-/// all copies or substantial portions of the Software.
-/// 
-/// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
-/// distribute, sublicense, create a derivative work, and/or sell copies of the
-/// Software in any work that is designed, intended, or marketed for pedagogical or
-/// instructional purposes related to programming, coding, application development,
-/// or information technology.  Permission for such use, copying, modification,
-/// merger, publication, distribution, sublicensing, creation of derivative works,
-/// or sale is expressly withheld.
-/// 
-/// This project and source code may use libraries or frameworks that are
-/// released under various Open-Source licenses. Use of those libraries and
-/// frameworks are governed by their own individual licenses.
-///
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-/// THE SOFTWARE.
+
 
 import Combine
 import Foundation
 import UIKit
+import SwiftUI
 
 final class GameLogicController: ObservableObject {
-  // 1
+  
+ var isStart = true
+
   private var goalCount = 0
+  
   
   //  если true  то показываем контур головы
   var isShape:Bool = false
   
-  private var countCircles = 0
+  var countCircles = 0
+  var activeCircleIndex = 0
   
   private var coordinateCircles: [CGFloat] = [0,0]
+  
+  // квадрат головы
+  var positionFace: CGPoint?
+  
+  // сторона (лево false / право true)
+  var side: Bool = Bool.random()
+  
+//  var pointsFace: [CGF]
+  
+  // метки
+  var evadePoints: [CGPoint] = []
+  
+  // если голова попала на метку, она попадает сюда, и меняет свой цвет
+  var successPoints: [Int] = []
+  var failePoints: [Int] = []
+  
+  
+  var sideCount:Int = 0
+  // if sideCount = 0 то новые круги,иначе вычисляем
 
   // 2
   @Published var makeItRain = false
@@ -53,61 +47,181 @@ final class GameLogicController: ObservableObject {
 
   // 4
   var shouldEvaluateResult = true
-
+  
+  
+  var startEvade = false
+  
+//  var viewsArray = RedCircle().drawCircles(maxCount: Int.random(in: 1...6))
+  var viewsArray = RedCircle().drawCircles(maxCount: 1)
+  
+  func updateViewsArray(count:Int) {
+    viewsArray = RedCircle().drawCircles(maxCount: count)
+    changeCountCircle(count)
+    resetActiveIndexCircle()
+    self.evadePoints = []
+    self.successPoints = []
+    self.failePoints = []
+  }
+  
+  var buttonColor = Color.white
   // 5
   func start() {
+    
     makeItRain = true
+    
+    if(!self.isStart) {
+      self.didRainStars(count: [viewWidth-90,200])
+    }
   }
   let viewHeight = UIScreen.main.bounds.size.height
   let viewWidth = UIScreen.main.bounds.size.width
   // 6
   func didRainStars(count: [CGFloat]) {
-//    print("didRainStars count: \(count)")
     coordinateCircles = count
   }
   
   func changeCountCircle(_ count: Int) {
-    print("change count Circle: \(count)")
     countCircles = count
   }
+  
+  func setActiveIndexCirlce() {
+    activeCircleIndex += 1
+  }
+  func resetActiveIndexCircle() {
+    activeCircleIndex = 0
+  }
 
-  // 7
+  
   func checkStarsCount(_ count: [CGFloat]) {
     
-    let x = viewWidth - count[1]/2
-    let y = count[0]*2
+
+    let x = count[0]
+    let y = count[1]
+    
+    
     if !shouldEvaluateResult || countCircles == 0  {
       return
     }
+    
+    
     if  x >= (coordinateCircles[0] - 50)
         && x <= (coordinateCircles[0] + 50)
         && y >= (coordinateCircles[1] - 50)
         && y <= (coordinateCircles[1] + 50) {
       
-      goalCount += 1
-      if countCircles == 0 {
+      if !self.isStart {
         
-        print("count circles == 0")
+        self.isStart = true
+      } else {
         
-      } else if countCircles == 1 {
         
-        print("is share = true")
-        isShape = true
+        goalCount += 1
+        if countCircles == 0 {
+          
+          print("count circles == 0")
+          
+        } else if countCircles == 1 {
+          
+          print("is share = true")
+          isShape = true
+          self.randomSideCount()
+          resetActiveIndexCircle()
+          DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.startEvade = true
+          }
+          
+        }
         
-      } 
-      
         changeCountCircle(countCircles - 1)
-    
+        setActiveIndexCirlce()
         shouldEvaluateResult = false
         successBadge = goalCount
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
           self.makeItRain = true
           self.shouldEvaluateResult = true
         }
-      
+      }
      
     }
   }
+  
+  func changePositionFace(path: Path) {
+    self.startEvade = false
+    self.positionFace = path.currentPoint
+    
+    evade()
+  }
+  
+  func changeSide() {
+    print("<<<--- change Side --->>>")
+    if self.sideCount > 0 {
+      self.shouldEvaluateResult = false
+      self.successPoints = []
+      self.evadePoints = []
+      self.failePoints = []
+      randomSide()
+      evade()
+      self.sideCount -= 1
+    }
+    else {
+      self.setIsShape()
+      self.updateViewsArray(count: Int.random(in: 1...6))
+    }
+  }
+  
+  func randomSideCount() {
+    self.sideCount = Int.random(in: 1...4)
+  }
+  
+  func randomSide() {
+    let newSide = Bool.random()
+    print(newSide)
+    self.side = newSide
+  }
+  
+  func setIsShape() {
+    self.isShape = !self.isShape
+  }
+  
+  func evade() {
+    //center
+    let startPoint = self.positionFace ?? CGPoint(x: 0, y: 0)
+    if self.side {
+      let fitstPoint =  CGPoint(x: startPoint.x  + 120, y: startPoint.y + 30)
+      let TwoPoint =  CGPoint(x: startPoint.x + 135, y: startPoint.y + 60)
+      let ThreePoint =  CGPoint(x: startPoint.x + 150, y: startPoint.y + 90)
+      let ThrowPoint =  CGPoint(x: startPoint.x + 165, y: startPoint.y + 120)
+      self.evadePoints = [fitstPoint,TwoPoint,ThreePoint,ThrowPoint]
+    } else {
+      let fitstPoint =  CGPoint(x: startPoint.x  - 20, y: startPoint.y + 30)
+      let TwoPoint =  CGPoint(x: startPoint.x - 35, y: startPoint.y + 60)
+      let ThreePoint =  CGPoint(x: startPoint.x - 50, y: startPoint.y + 90)
+      let ThrowPoint =  CGPoint(x: startPoint.x - 65, y: startPoint.y + 120)
+      self.evadePoints = [fitstPoint,TwoPoint,ThreePoint,ThrowPoint]
+    }
+    self.shouldEvaluateResult = true
+
+  }
+  
+  // добовление очка
+  func successEvadePoint(point:Int) {
+    
+    if !self.successPoints.contains(point) {
+      
+      self.successPoints.append(point)
+      self.goalCount += 1
+      self.successBadge = goalCount
+      
+      if point > 0 && self.successPoints.contains(point - 1) {
+        self.failePoints.append(point-1)
+      }
+      
+    }
+    
+  }
+
+  
+  
 
 }

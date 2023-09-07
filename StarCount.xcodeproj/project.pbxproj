@@ -22,12 +22,13 @@
 		422414C12A8659FA00C8092E /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422414C02A8659FA00C8092E /* CameraView.swift */; };
 		425D97362A934811006EB617 /* GenerateCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425D97352A934811006EB617 /* GenerateCircle.swift */; };
 		42991BBA2A94EE7700CA87FB /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42991BB92A94EE7700CA87FB /* StartView.swift */; };
+		42D9B9842AA1DAB70024AB68 /* boxing.png in Resources */ = {isa = PBXBuildFile; fileRef = 42D9B9832AA1DAB70024AB68 /* boxing.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1839F4AF25190F2A00BB00F1 /* AppMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMain.swift; sourceTree = "<group>"; };
 		185A48EB25DC2DF1008592C9 /* FingersOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FingersOverlay.swift; sourceTree = "<group>"; };
-		18D775BD22AD944300AE281E /* StarCount.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StarCount.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		18D775BD22AD944300AE281E /* ХОЧУ!БОКС.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ХОЧУ!БОКС.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		18D775C422AD944300AE281E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		18D775C622AD944400AE281E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		18D775C922AD944400AE281E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -42,6 +43,7 @@
 		422414C02A8659FA00C8092E /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		425D97352A934811006EB617 /* GenerateCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateCircle.swift; sourceTree = "<group>"; };
 		42991BB92A94EE7700CA87FB /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
+		42D9B9832AA1DAB70024AB68 /* boxing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = boxing.png; path = ../../../../Downloads/boxing.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,7 +70,7 @@
 		18D775BE22AD944300AE281E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				18D775BD22AD944300AE281E /* StarCount.app */,
+				18D775BD22AD944300AE281E /* ХОЧУ!БОКС.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -113,6 +115,7 @@
 			children = (
 				304BEFC72586265600CED98D /* StarAnimator */,
 				18D775C622AD944400AE281E /* Assets.xcassets */,
+				42D9B9832AA1DAB70024AB68 /* boxing.png */,
 				18D775DA22AD963800AE281E /* LaunchScreen.storyboard */,
 				18D775CE22AD944400AE281E /* Info.plist */,
 				304BEFCB258628F800CED98D /* AppError.swift */,
@@ -123,9 +126,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		18D775BC22AD944300AE281E /* StarCount */ = {
+		18D775BC22AD944300AE281E /* ХОЧУ!БОКС */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 18D775D122AD944400AE281E /* Build configuration list for PBXNativeTarget "StarCount" */;
+			buildConfigurationList = 18D775D122AD944400AE281E /* Build configuration list for PBXNativeTarget "ХОЧУ!БОКС" */;
 			buildPhases = (
 				181FE31D248EA6C900A180EA /* SwiftLint */,
 				18D775B922AD944300AE281E /* Sources */,
@@ -136,9 +139,9 @@
 			);
 			dependencies = (
 			);
-			name = StarCount;
+			name = "ХОЧУ!БОКС";
 			productName = MyRWTutorial;
-			productReference = 18D775BD22AD944300AE281E /* StarCount.app */;
+			productReference = 18D775BD22AD944300AE281E /* ХОЧУ!БОКС.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -169,7 +172,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				18D775BC22AD944300AE281E /* StarCount */,
+				18D775BC22AD944300AE281E /* ХОЧУ!БОКС */,
 			);
 		};
 /* End PBXProject section */
@@ -179,6 +182,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42D9B9842AA1DAB70024AB68 /* boxing.png in Resources */,
 				18D775D822AD963800AE281E /* LaunchScreen.storyboard in Resources */,
 				18D775CA22AD944400AE281E /* Preview Assets.xcassets in Resources */,
 				18D775C722AD944400AE281E /* Assets.xcassets in Resources */,
@@ -362,17 +366,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "StarCount/Preview\\ Content";
-				DEVELOPMENT_TEAM = 68W5J8T734;
+				DEVELOPMENT_TEAM = N3J5DWL6V6;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "StarCount/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = pavit.ring;
+				PRODUCT_BUNDLE_IDENTIFIER = pavit.design;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -382,17 +388,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "StarCount/Preview\\ Content";
-				DEVELOPMENT_TEAM = 68W5J8T734;
+				DEVELOPMENT_TEAM = N3J5DWL6V6;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "StarCount/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = pavit.ring;
+				PRODUCT_BUNDLE_IDENTIFIER = pavit.design;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -410,7 +418,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		18D775D122AD944400AE281E /* Build configuration list for PBXNativeTarget "StarCount" */ = {
+		18D775D122AD944400AE281E /* Build configuration list for PBXNativeTarget "ХОЧУ!БОКС" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				18D775D222AD944400AE281E /* Debug */,

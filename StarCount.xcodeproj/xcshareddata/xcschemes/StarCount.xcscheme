@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "18D775BC22AD944300AE281E"
-               BuildableName = "StarCount.app"
-               BlueprintName = "StarCount"
+               BuildableName = "&#x425;&#x41e;&#x427;&#x423;!&#x411;&#x41e;&#x41a;&#x421;.app"
+               BlueprintName = "&#x425;&#x41e;&#x427;&#x423;!&#x411;&#x41e;&#x41a;&#x421;"
                ReferencedContainer = "container:StarCount.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,8 +45,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "18D775BC22AD944300AE281E"
-            BuildableName = "StarCount.app"
-            BlueprintName = "StarCount"
+            BuildableName = "&#x425;&#x41e;&#x427;&#x423;!&#x411;&#x41e;&#x41a;&#x421;.app"
+            BlueprintName = "&#x425;&#x41e;&#x427;&#x423;!&#x411;&#x41e;&#x41a;&#x421;"
             ReferencedContainer = "container:StarCount.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -62,8 +62,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "18D775BC22AD944300AE281E"
-            BuildableName = "StarCount.app"
-            BlueprintName = "StarCount"
+            BuildableName = "&#x425;&#x41e;&#x427;&#x423;!&#x411;&#x41e;&#x41a;&#x421;.app"
+            BlueprintName = "&#x425;&#x41e;&#x427;&#x423;!&#x411;&#x41e;&#x41a;&#x421;"
             ReferencedContainer = "container:StarCount.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

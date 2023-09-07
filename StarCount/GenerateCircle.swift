@@ -2,9 +2,9 @@ import UIKit
 
 
 class RedCircle {
-  func drawCircles() -> [UIView] {
+  func drawCircles(maxCount: Int) -> [UIView] {
     var number = 1
-    var maxCount = 5
+//    var maxCount = 5
     var viewsArray: [UIView] = []
     
     //1. Ширина и высота экрана
@@ -18,7 +18,7 @@ class RedCircle {
       //3. Два рандомных числа
       let randomNumberOne = CGFloat.random(in: viewWidth*0.2...viewWidth*0.8)//CGFloat(arc4random_uniform(40))
       let randomNumberTwo = CGFloat.random(in: 100...viewHeight*0.3)//CGFloat(arc4random_uniform(20))
-//      print("randomNumberOne: \(randomNumberOne), randomNumberTwo: \(randomNumberTwo)")
+
       //4. Координаты и размеры круга
       let rect = CGRect(x:  randomNumberOne,
                         y:  randomNumberTwo,
@@ -27,7 +27,7 @@ class RedCircle {
       
       //5. Смотрим пересечение
       let newView = UIView(frame: rect)
-//      guard (viewsArray.filter { $0.isCrossing(newView) }).isEmpty else { print(false); continue }
+
       
       //6. Задаём цвет и делаем обрезку
       newView.layer.cornerRadius = rectSideSize/2

@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 import AVFoundation
 import Vision
 
@@ -7,16 +8,14 @@ final class CameraViewController: UIViewController {
   private var drawings: [CAShapeLayer] = []
   
   
-  
+//  private let videoDataOutput = AVCaptureVideoDataOutput()
   private let videoDataOutput = AVCaptureVideoDataOutput()
+  
   private let captureSession = AVCaptureSession()
   
-
-  
+    
   /// Using `lazy` keyword because the `captureSession` needs to be loaded before we can use the preview layer.
   private lazy var previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-  
-  private var gameLogicController = GameLogicController()
   
   
   
@@ -28,6 +27,14 @@ final class CameraViewController: UIViewController {
     
     getCameraFrames()
     captureSession.startRunning()
+    
+    let value = UIInterfaceOrientation.landscapeLeft.rawValue
+    UIDevice.current.setValue(value, forKey: "orientation")
+
+  }
+  
+  override var shouldAutorotate: Bool {
+      return true
   }
   
 
@@ -44,6 +51,7 @@ final class CameraViewController: UIViewController {
     
     // ⚠️ You should wrap this in a `do-catch` block, but this will be good enough for the demo.
     let cameraInput = try! AVCaptureDeviceInput(device: device)
+    
     if captureSession.inputs.isEmpty {
         captureSession.addInput(cameraInput)
     }
@@ -54,6 +62,12 @@ final class CameraViewController: UIViewController {
     previewLayer.videoGravity = .resizeAspectFill
     view.layer.addSublayer(previewLayer)
     previewLayer.frame = view.frame
+    if #available(iOS 17.0, *) {
+      previewLayer.connection?.videoRotationAngle = 180
+    } else {
+      // Fallback on earlier versions
+      previewLayer.connection?.videoOrientation = .landscapeRight
+    }
   }
   
   private func getCameraFrames() {
@@ -61,15 +75,22 @@ final class CameraViewController: UIViewController {
     
     videoDataOutput.alwaysDiscardsLateVideoFrames = true
     // You do not want to process the frames on the Main Thread so we off load to another thread
-    videoDataOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "camera_frame_processing_queue"))
+    videoDataOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "CameraFeedOutput", qos: .userInteractive))
+    
+    
     
     captureSession.addOutput(videoDataOutput)
     
-    guard let connection = videoDataOutput.connection(with: .video), connection.isVideoOrientationSupported else {
-      return
-    }
     
-    connection.videoOrientation = .portrait
+//    var connection = videoDataOutput.connection(with: .video)
+//    if #available(iOS 17.0, *) {
+//      connection?.videoRotationAngle = 90
+//    } else {
+//      // Fallback on earlier versions
+//      
+//      connection?.videoOrientation = .landscapeRight
+//    }
+    
   }
 
   
@@ -84,6 +105,11 @@ final class CameraViewController: UIViewController {
   
   // 1
   var pointsProcessorHandler: (([CGPoint]) -> Void)?
+  
+  var isShare:Bool?
+  
+  var pointsProcessorFace: (([Path]) -> Void)?
+  
 
   func processPoints(_ fingerTips: [CGPoint]) {
     // 2
@@ -93,6 +119,11 @@ final class CameraViewController: UIViewController {
 
     // 3
     pointsProcessorHandler?(convertedPoints)
+  
+  }
+  
+  func processFacePoints(_ faceTips: [Path]) {
+    pointsProcessorFace?(faceTips)
   }
 
   
@@ -105,45 +136,36 @@ final class CameraViewController: UIViewController {
           // print("✅ Detected \(results.count) faces!")
           self.handleFaceDetectionResults(observedFaces: results)
         } else {
+          let emptyPath = Path() {data in
+            data.move(to: CGPoint(x: 0, y: 0))
+          }
+          self.processFacePoints([emptyPath])
           // print("❌ No face was detected")
           self.clearDrawings()
         }
       }
     }
     
-    let imageResultHandler = VNImageRequestHandler(cvPixelBuffer: image, orientation: .leftMirrored, options: [:])
+    let imageResultHandler = VNImageRequestHandler(cvPixelBuffer: image, orientation: .downMirrored, options: [:])
     try? imageResultHandler.perform([faceDetectionRequest])
   }
-
+  
+  
   private func handleFaceDetectionResults(observedFaces: [VNFaceObservation]) {
     clearDrawings()
     
-//    print(observedFaces)
-    
+
     // Create the boxes
-    let facesBoundingBoxes: [CAShapeLayer] = observedFaces.map({ (observedFace: VNFaceObservation) -> CAShapeLayer in
+    let facesBoundingBoxes: [Path] = observedFaces.map({ (observedFace: VNFaceObservation) in
       
       let faceBoundingBoxOnScreen = previewLayer.layerRectConverted(fromMetadataOutputRect: observedFace.boundingBox)
     
-      
-         
       let faceBoundingBoxPath = CGPath(rect: faceBoundingBoxOnScreen, transform: nil)
-      let faceBoundingBoxShape = CAShapeLayer()
-        
-      // Set properties of the box shape
-      faceBoundingBoxShape.path = faceBoundingBoxPath
-      faceBoundingBoxShape.fillColor = UIColor.clear.cgColor
-      faceBoundingBoxShape.strokeColor = gameLogicController.isShape ? UIColor.clear.cgColor : UIColor.red.cgColor
-      faceBoundingBoxShape.lineWidth = gameLogicController.isShape ? 0 : 3
-
-      return faceBoundingBoxShape
+      
+      return Path(faceBoundingBoxPath)
     })
-    
-    // Add boxes to the view layer and the array
-    facesBoundingBoxes.forEach { faceBoundingBox in
-      view.layer.addSublayer(faceBoundingBox)
-      drawings = facesBoundingBoxes
-    }
+    processFacePoints(facesBoundingBoxes)
+   
   }
   
   private func clearDrawings() {

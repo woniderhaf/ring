@@ -1,42 +1,19 @@
-/// Copyright (c) 2021 Razeware LLC
-///
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-///
-/// The above copyright notice and this permission notice shall be included in
-/// all copies or substantial portions of the Software.
-///
-/// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
-/// distribute, sublicense, create a derivative work, and/or sell copies of the
-/// Software in any work that is designed, intended, or marketed for pedagogical or
-/// instructional purposes related to programming, coding, application development,
-/// or information technology.  Permission for such use, copying, modification,
-/// merger, publication, distribution, sublicensing, creation of derivative works,
-/// or sale is expressly withheld.
-///
-/// This project and source code may use libraries or frameworks that are
-/// released under various Open-Source licenses. Use of those libraries and
-/// frameworks are governed by their own individual licenses.
-///
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-/// THE SOFTWARE.
 
 import SwiftUI
+import Vision
 
 struct ContentView: View {
-  @StateObject private var gameLogicController = GameLogicController()
-  @State  private  var overlayPoints: [ CGPoint ] = []
-  @ViewBuilder
   
+  @StateObject private var gameLogicController = GameLogicController()
+  
+  init() {
+    gameLogicController.start()
+  }
+  
+  @State  private  var overlayPoints: [ CGPoint ] = []
+  
+  @State  private  var PointsFace: [Path]?
+  @ViewBuilder
   
     
     private func successBadge(number: Int) -> some View {
@@ -49,20 +26,25 @@ struct ContentView: View {
               .shadow(radius: 5)
     }
   
-  private var viewsArray = RedCircle().drawCircles()
-  
 
-  private func show(number: Int) -> some View {
-    
-//     gameLogicController.didRainStars(count: [round(viewsArray[number].frame.origin.x),round(viewsArray[number].frame.origin.y)])
-    
-    return  gameLogicController.shouldEvaluateResult && !gameLogicController.isShape ?
+  private func show(index: Int) -> some View {
+   
+    return
+    !gameLogicController.isStart ?
+    Image(systemName: "restart.circle.fill")
+      .resizable()
+      .imageScale(.large)
+      .foregroundColor(Color.white)
+      .frame(width: 50,height: 50)
+      .position(x: viewWidth - 90,y: 200) 
+    :
+    gameLogicController.shouldEvaluateResult && !gameLogicController.isShape ?
     Image(systemName: "circle.fill")
       .resizable()
       .imageScale(.large)
       .foregroundColor(.red)
       .frame(width: 50, height: 50)
-      .position(x: viewsArray[number].frame.origin.x,y: viewsArray[number].frame.origin.y) 
+      .position(x: gameLogicController.viewsArray[index].frame.origin.x,y: gameLogicController.viewsArray[index].frame.origin.y)
     :
     Image(systemName: "circle.fill")
       .resizable()
@@ -70,12 +52,14 @@ struct ContentView: View {
       .foregroundColor(.red)
       .frame(width: 0, height: 0)
       .position(x: 0,y: 0)
+   
   }
   
-  private func showCount(number: Int) -> some View {
+
+  private func showCount(index: Int) -> some View {
     
     if gameLogicController.isShape {
-      return Image(systemName: "\(number).circle.fill")
+      return Image(systemName: "\(gameLogicController.successBadge).circle.fill")
         .resizable()
         .imageScale(.large)
         .foregroundColor(.white)
@@ -83,40 +67,135 @@ struct ContentView: View {
         .position(x: UIScreen.main.bounds.width/2,y: 50)
     
     }
-    gameLogicController.didRainStars(count: [round(viewsArray[number].frame.origin.x),round(viewsArray[number].frame.origin.y)])
-    return  Image(systemName: "\(number).circle.fill")
+    gameLogicController.didRainStars(count: [round(gameLogicController.viewsArray[index].frame.origin.x),round(gameLogicController.viewsArray[index].frame.origin.y)])
+    return  Image(systemName: "\(gameLogicController.successBadge).circle.fill")
       .resizable()
       .imageScale(.large)
       .foregroundColor(.white)
       .frame(width: 70, height: 70)
       .position(x: UIScreen.main.bounds.width/2,y: 50)
   }
+  
+  
+  private func updatePointsFace(observedFaces: [Path]) {
+    PointsFace = observedFaces
+  }
+  
+  private func showFace() -> some View {
+//    if gameLogicController.startEvade {
+//      gameLogicController.changePositionFace(path: PointsFace?.first ?? Path())
+//    }
+    if !gameLogicController.isShape {
+    } else if gameLogicController.evadePoints.count > 0 && PointsFace?.first?.currentPoint?.x ?? 0 > 0 {
+      let currentPoint:CGPoint = PointsFace?.first?.currentPoint ?? CGPoint(x: 0, y: 0)
+      if gameLogicController.side {
+        
+        if gameLogicController.evadePoints[0].x - currentPoint.x  < 100 && currentPoint.y < gameLogicController.evadePoints[0].y && gameLogicController.evadePoints[0].y < currentPoint.y + 80   {
+          gameLogicController.successEvadePoint(point: 0)
+        }
+        if gameLogicController.evadePoints[1].x - currentPoint.x < 100 && currentPoint.y < gameLogicController.evadePoints[1].y && gameLogicController.evadePoints[1].y < currentPoint.y + 80  {
+          
+          gameLogicController.successEvadePoint(point: 1)
+        }
+        if gameLogicController.evadePoints[2].x - currentPoint.x < 100 && currentPoint.y < gameLogicController.evadePoints[2].y && gameLogicController.evadePoints[2].y < currentPoint.y + 80  {
+          
+          gameLogicController.successEvadePoint(point: 2)
+          
+    
+        }
+        if gameLogicController.evadePoints[3].x - currentPoint.x < 100 && currentPoint.y < gameLogicController.evadePoints[3].y && gameLogicController.evadePoints[3].y < currentPoint.y + 80  {
+          
+          gameLogicController.successEvadePoint(point: 3)
+          
+          if gameLogicController.shouldEvaluateResult {
+            gameLogicController.changeSide()
+          }
+        }
+        
+      } else {
+        
+        if gameLogicController.evadePoints[0].x - currentPoint.x  > 15 && currentPoint.y < gameLogicController.evadePoints[0].y && gameLogicController.evadePoints[0].y < currentPoint.y + 100   {
+          gameLogicController.successEvadePoint(point: 0)
+        }
+        if gameLogicController.evadePoints[1].x - currentPoint.x > 15 && currentPoint.y < gameLogicController.evadePoints[1].y && gameLogicController.evadePoints[1].y < currentPoint.y + 100  {
+          
+          gameLogicController.successEvadePoint(point: 1)
+        }
+        if gameLogicController.evadePoints[2].x - currentPoint.x > 15 && currentPoint.y < gameLogicController.evadePoints[2].y && gameLogicController.evadePoints[2].y < currentPoint.y + 100  {
+          
+          gameLogicController.successEvadePoint(point: 2)
+          
+        }
+        
+        if gameLogicController.evadePoints[3].x - currentPoint.x > 15 && currentPoint.y < gameLogicController.evadePoints[3].y && gameLogicController.evadePoints[3].y < currentPoint.y + 100  {
+          
+          gameLogicController.successEvadePoint(point: 3)
+          
 
+//          gameLogicController.updateViewsArray(count: Int.random(in: 1...6))
+//          gameLogicController.setIsShape()
+          if gameLogicController.shouldEvaluateResult {
+            gameLogicController.changeSide()
+          }
+          
+        }
+        
+      }
+      
+    }
+   
+    return PointsFace?.first?.stroke(Color.red, lineWidth: gameLogicController.isShape ? 2 : 0)
+
+  }
+  
+  
+  
+  private func showEvadePoint(point:CGPoint, index: Int) -> some View {
+    
+    return Image(systemName: "circle.fill")
+      .resizable()
+      .imageScale(.large)
+      .foregroundColor(gameLogicController.successPoints.contains(index) ? .green : gameLogicController.failePoints.contains(index) ? .red : .white)
+      .frame(width: point.x > 0 ? 20 : 0, height: 20)
+      .position(
+        x: point.x,
+        y: point.y)
+  }
+  
+  
   let viewHeight = UIScreen.main.bounds.size.height
   let viewWidth = UIScreen.main.bounds.size.width
   
-  var body: some View {
-    ZStack {
-      CameraView {
-        overlayPoints = $0
-        gameLogicController.checkStarsCount([ round($0.first?.x ?? 0)  ,round($0.first?.y ?? 0)])
-      }
-      showCount(number: gameLogicController.successBadge)
-      
-//      StarAnimator(makeItRain: $gameLogicController.makeItRain) {_ in
-//        let number = gameLogicController.successBadge
-//          gameLogicController.didRainStars(count: [round(viewsArray[number].frame.origin.x),
-//                                                   round(viewsArray[number].frame.origin.y)
-//                                                  ])
-//        
-//      }
-      
 
+  
+
+  var body: some View {
+    
+    ZStack {
+      CameraView(
+        pointsProcessorHandler: { points in
+        gameLogicController.checkStarsCount([ round(points.first?.x ?? 0)  ,round(points.first?.y ?? 0)])
+        
+      },
+        pointsProcessorFace:  {data in
+        
+        updatePointsFace(observedFaces: data)
+        
+        }
+      )
+      gameLogicController.isStart  ? showCount(index: gameLogicController.activeCircleIndex) : nil
+      showFace()
+      showEvadePoint(point: gameLogicController.evadePoints.first ?? CGPoint(x: 0, y: 0),index: 0)
+      showEvadePoint(point: gameLogicController.evadePoints.count > 1 ? gameLogicController.evadePoints[1] : CGPoint(x: 0, y: 0),index: 1)
+      showEvadePoint(point: gameLogicController.evadePoints.count > 2 ? gameLogicController.evadePoints[2] : CGPoint(x: 0, y: 0),index: 2)
+      showEvadePoint(point: gameLogicController.evadePoints.count > 3 ? gameLogicController.evadePoints[3] : CGPoint(x: 0, y: 0),index: 3)
     }
     .onAppear {
-      gameLogicController.changeCountCircle(viewsArray.count)
+      gameLogicController.changeCountCircle(gameLogicController.viewsArray.count)
     }
-    .overlay(show(number: gameLogicController.successBadge))
+    .overlay(
+      show(index: gameLogicController.activeCircleIndex)
+    )
   }
 }
 
