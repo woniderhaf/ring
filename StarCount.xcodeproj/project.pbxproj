@@ -13,8 +13,8 @@
 		18D775C722AD944400AE281E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18D775C622AD944400AE281E /* Assets.xcassets */; };
 		18D775CA22AD944400AE281E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18D775C922AD944400AE281E /* Preview Assets.xcassets */; };
 		18D775D822AD963800AE281E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18D775DA22AD963800AE281E /* LaunchScreen.storyboard */; };
-		301202F0258528A7007B2E1B /* StarAnimatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301202EF258528A7007B2E1B /* StarAnimatorView.swift */; };
-		303C3F292584A63500CA22F3 /* StarAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303C3F282584A63500CA22F3 /* StarAnimator.swift */; };
+		301202F0258528A7007B2E1B /* StartAnimateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301202EF258528A7007B2E1B /* StartAnimateView.swift */; };
+		303C3F292584A63500CA22F3 /* StartAnimate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303C3F282584A63500CA22F3 /* StartAnimate.swift */; };
 		304BEFCC258628F800CED98D /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304BEFCB258628F800CED98D /* AppError.swift */; };
 		308D74B125878AC400A39EB8 /* GameLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308D74B025878AC400A39EB8 /* GameLogicController.swift */; };
 		422414BD2A86594A00C8092E /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422414BC2A86594A00C8092E /* CameraPreview.swift */; };
@@ -22,7 +22,6 @@
 		422414C12A8659FA00C8092E /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422414C02A8659FA00C8092E /* CameraView.swift */; };
 		425D97362A934811006EB617 /* GenerateCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425D97352A934811006EB617 /* GenerateCircle.swift */; };
 		42991BBA2A94EE7700CA87FB /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42991BB92A94EE7700CA87FB /* StartView.swift */; };
-		42D9B9842AA1DAB70024AB68 /* boxing.png in Resources */ = {isa = PBXBuildFile; fileRef = 42D9B9832AA1DAB70024AB68 /* boxing.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,8 +33,8 @@
 		18D775C922AD944400AE281E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		18D775CE22AD944400AE281E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		18D775DE22AD96B400AE281E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		301202EF258528A7007B2E1B /* StarAnimatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarAnimatorView.swift; sourceTree = "<group>"; };
-		303C3F282584A63500CA22F3 /* StarAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarAnimator.swift; sourceTree = "<group>"; };
+		301202EF258528A7007B2E1B /* StartAnimateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartAnimateView.swift; sourceTree = "<group>"; };
+		303C3F282584A63500CA22F3 /* StartAnimate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartAnimate.swift; sourceTree = "<group>"; };
 		304BEFCB258628F800CED98D /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		308D74B025878AC400A39EB8 /* GameLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLogicController.swift; sourceTree = "<group>"; };
 		422414BC2A86594A00C8092E /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
@@ -43,7 +42,6 @@
 		422414C02A8659FA00C8092E /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		425D97352A934811006EB617 /* GenerateCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateCircle.swift; sourceTree = "<group>"; };
 		42991BB92A94EE7700CA87FB /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
-		42D9B9832AA1DAB70024AB68 /* boxing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = boxing.png; path = ../../../../Downloads/boxing.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,8 +102,8 @@
 		304BEFC72586265600CED98D /* StarAnimator */ = {
 			isa = PBXGroup;
 			children = (
-				303C3F282584A63500CA22F3 /* StarAnimator.swift */,
-				301202EF258528A7007B2E1B /* StarAnimatorView.swift */,
+				303C3F282584A63500CA22F3 /* StartAnimate.swift */,
+				301202EF258528A7007B2E1B /* StartAnimateView.swift */,
 			);
 			path = StarAnimator;
 			sourceTree = "<group>";
@@ -115,7 +113,6 @@
 			children = (
 				304BEFC72586265600CED98D /* StarAnimator */,
 				18D775C622AD944400AE281E /* Assets.xcassets */,
-				42D9B9832AA1DAB70024AB68 /* boxing.png */,
 				18D775DA22AD963800AE281E /* LaunchScreen.storyboard */,
 				18D775CE22AD944400AE281E /* Info.plist */,
 				304BEFCB258628F800CED98D /* AppError.swift */,
@@ -182,7 +179,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42D9B9842AA1DAB70024AB68 /* boxing.png in Resources */,
 				18D775D822AD963800AE281E /* LaunchScreen.storyboard in Resources */,
 				18D775CA22AD944400AE281E /* Preview Assets.xcassets in Resources */,
 				18D775C722AD944400AE281E /* Assets.xcassets in Resources */,
@@ -224,9 +220,9 @@
 				425D97362A934811006EB617 /* GenerateCircle.swift in Sources */,
 				422414C12A8659FA00C8092E /* CameraView.swift in Sources */,
 				304BEFCC258628F800CED98D /* AppError.swift in Sources */,
-				301202F0258528A7007B2E1B /* StarAnimatorView.swift in Sources */,
+				301202F0258528A7007B2E1B /* StartAnimateView.swift in Sources */,
 				308D74B125878AC400A39EB8 /* GameLogicController.swift in Sources */,
-				303C3F292584A63500CA22F3 /* StarAnimator.swift in Sources */,
+				303C3F292584A63500CA22F3 /* StartAnimate.swift in Sources */,
 				185A48EC25DC2DF1008592C9 /* FingersOverlay.swift in Sources */,
 				422414BF2A8659A200C8092E /* CameraViewController.swift in Sources */,
 			);

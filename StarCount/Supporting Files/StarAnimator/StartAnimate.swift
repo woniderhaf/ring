@@ -32,31 +32,56 @@
 
 import SwiftUI
 
-struct StarAnimator: UIViewRepresentable {
-  final class Coordinator: NSObject, StarAnimatorDelegate {
-    var parent: StarAnimator
+struct StartAnimate: UIViewRepresentable {
+  
+  final class Coordinator: NSObject, StartAnimateDelegate {
+    var parent: StartAnimate
+    
+ 
 
-    init(_ parent: StarAnimator) {
+    init(_ parent: StartAnimate) {
       self.parent = parent
+      
     }
 
     func didStartRaining(count: Int) {
-      parent.makeItRain = false
+      parent.isStart = false
       parent.numberOfStarsHandler(count)
+    }
+    
+    func start() {
+      parent.start()
+    }
+    
+    func setIsRender() {
+      parent.setIsRender()
     }
   }
 
-  @Binding var makeItRain: Bool
+  @Binding var isStart: Bool
+  
+  @Binding var isRender: Bool
+  
+  @Binding var isAnimation: Bool
+  
   var numberOfStarsHandler: (Int) -> Void
+  
+  var setIsRender: () -> Void
+  
+  var start: () -> Void
 
   func makeUIView(context: Context) -> StarAnimatorView {
     let view = StarAnimatorView()
     view.delegate = context.coordinator
+    
     return view
+    
   }
 
   func updateUIView(_ uiView: StarAnimatorView, context: Context) {
-   
+    if !isStart && !isRender {
+      uiView.rain(complection: setIsRender)
+    }
   }
 
   func makeCoordinator() -> Coordinator {

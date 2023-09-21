@@ -3,10 +3,11 @@ import SwiftUI
 import AVFoundation
 import Vision
 
-final class CameraViewController: UIViewController {
+ class CameraViewController: UIViewController {
   
   private var drawings: [CAShapeLayer] = []
-  
+
+
   
 //  private let videoDataOutput = AVCaptureVideoDataOutput()
   private let videoDataOutput = AVCaptureVideoDataOutput()
@@ -27,6 +28,7 @@ final class CameraViewController: UIViewController {
     
     getCameraFrames()
     captureSession.startRunning()
+  
     
     let value = UIInterfaceOrientation.landscapeLeft.rawValue
     UIDevice.current.setValue(value, forKey: "orientation")
@@ -38,10 +40,10 @@ final class CameraViewController: UIViewController {
   }
   
 
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-    previewLayer.frame = view.frame
-  }
+//  override func viewDidLayoutSubviews() {
+//    super.viewDidLayoutSubviews()
+//    previewLayer.frame = view.frame
+//  }
   
   private func addCameraInput() {
     print("add camer Input func start!!")
@@ -59,9 +61,11 @@ final class CameraViewController: UIViewController {
   }
   
   private func showCameraFeed() {
+    
     previewLayer.videoGravity = .resizeAspectFill
     view.layer.addSublayer(previewLayer)
     previewLayer.frame = view.frame
+    
     if #available(iOS 17.0, *) {
       previewLayer.connection?.videoRotationAngle = 180
     } else {
@@ -77,19 +81,7 @@ final class CameraViewController: UIViewController {
     // You do not want to process the frames on the Main Thread so we off load to another thread
     videoDataOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "CameraFeedOutput", qos: .userInteractive))
     
-    
-    
     captureSession.addOutput(videoDataOutput)
-    
-    
-//    var connection = videoDataOutput.connection(with: .video)
-//    if #available(iOS 17.0, *) {
-//      connection?.videoRotationAngle = 90
-//    } else {
-//      // Fallback on earlier versions
-//      
-//      connection?.videoOrientation = .landscapeRight
-//    }
     
   }
 
@@ -104,21 +96,28 @@ final class CameraViewController: UIViewController {
   }()
   
   // 1
-  var pointsProcessorHandler: (([CGPoint]) -> Void)?
+  var pointsProcessorHandler: (([[CGPoint]]) -> Void)?
   
   var isShare:Bool?
   
   var pointsProcessorFace: (([Path]) -> Void)?
   
 
-  func processPoints(_ fingerTips: [CGPoint]) {
+  func processPoints(_ fingerTips: [[CGPoint]]) {
     // 2
-    let convertedPoints = fingerTips.map {
+    let convertedPointsOne = fingerTips[0].map {
       previewLayer.layerPointConverted(fromCaptureDevicePoint: $0)
     }
 
     // 3
-    pointsProcessorHandler?(convertedPoints)
+    
+    
+    let convertedPointsTwo = fingerTips[1].map {
+      previewLayer.layerPointConverted(fromCaptureDevicePoint: $0)
+    }
+
+    // 3
+    pointsProcessorHandler?([convertedPointsOne,convertedPointsTwo])
   
   }
   
@@ -189,7 +188,7 @@ CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         
         detectFace(image: frame)
         
-          var fingerTips: [CGPoint] = []
+          var fingerTips: [[CGPoint]] = [[],[]]
           defer {
             DispatchQueue.main.sync {
               self.processPoints(fingerTips)
@@ -214,83 +213,100 @@ CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
           else {
             return
           }
-          var recognizedPoints: [VNRecognizedPoint] = []
-          var sizeScreen: CGRect = UIScreen.main.bounds
-          try results.forEach { observation in
-            // 1
-            let fingers = try observation.recognizedPoints(.all)
+          var recognizedPoints: [[VNRecognizedPoint]] = [[],[]]
+          
+//          if #available(iOS 15.0, *) {
+//            print(results.first?.chirality == VNChirality.left)
+//          } else {
+//            // Fallback on earlier versions
+//          }
+          for (index,observation) in results.enumerated() {
+            let fingers = try results[index].recognizedPoints(.all)
             // Tip
             if let thumbTipPoint = fingers[.thumbTip] {
-              recognizedPoints.append(thumbTipPoint)
+              recognizedPoints[index].append(thumbTipPoint)
             }
             if let indexTipPoint = fingers[.indexTip] {
-              recognizedPoints.append(indexTipPoint)
+              recognizedPoints[index].append(indexTipPoint)
             }
             if let middleTipPoint = fingers[.middleTip] {
-              recognizedPoints.append(middleTipPoint)
+              recognizedPoints[index].append(middleTipPoint)
             }
             if let ringTipPoint = fingers[.ringTip] {
-              recognizedPoints.append(ringTipPoint)
+              recognizedPoints[index].append(ringTipPoint)
             }
             if let littleTipPoint = fingers[.littleTip] {
-              recognizedPoints.append(littleTipPoint)
+              recognizedPoints[index].append(littleTipPoint)
             }
             // Pip
     
             if let thumbIpPoint = fingers[.thumbIP] {
-              recognizedPoints.append(thumbIpPoint)
+              recognizedPoints[index].append(thumbIpPoint)
             }
             if let indexPipPoint = fingers[.indexPIP] {
-              recognizedPoints.append(indexPipPoint)
+              recognizedPoints[index].append(indexPipPoint)
             }
             if let middlePipPoint = fingers[.middlePIP] {
-              recognizedPoints.append(middlePipPoint)
+              recognizedPoints[index].append(middlePipPoint)
             }
             if let ringPipPoint = fingers[.ringPIP] {
-              recognizedPoints.append(ringPipPoint)
+              recognizedPoints[index].append(ringPipPoint)
             }
             if let littlePipPoint = fingers[.littlePIP] {
-              recognizedPoints.append(littlePipPoint)
+              recognizedPoints[index].append(littlePipPoint)
             }
     
     
             // MCP
             if let thumbMpPoint = fingers[.thumbMP] {
-              recognizedPoints.append(thumbMpPoint)
+              recognizedPoints[index].append(thumbMpPoint)
             }
             if let indexMCPPoint = fingers[.indexMCP] {
-              recognizedPoints.append(indexMCPPoint)
+              recognizedPoints[index].append(indexMCPPoint)
             }
             if let middleMCPPoint = fingers[.middleMCP] {
-              recognizedPoints.append(middleMCPPoint)
+              recognizedPoints[index].append(middleMCPPoint)
             }
             if let ringMCPPoint = fingers[.ringMCP] {
-              recognizedPoints.append(ringMCPPoint)
+              recognizedPoints[index].append(ringMCPPoint)
             }
             if let littleMCPPoint = fingers[.littleMCP] {
-              recognizedPoints.append(littleMCPPoint)
+              recognizedPoints[index].append(littleMCPPoint)
             }
     
             // CMC
             if let thumbDipPoint = fingers[.thumbCMC] {
-              recognizedPoints.append(thumbDipPoint)
+              recognizedPoints[index].append(thumbDipPoint)
             }
             if let indexDipPoint = fingers[.indexDIP] {
-              recognizedPoints.append(indexDipPoint)
+              recognizedPoints[index].append(indexDipPoint)
             }
             if let middleDipPoint = fingers[.middleDIP] {
-              recognizedPoints.append(middleDipPoint)
+              recognizedPoints[index].append(middleDipPoint)
             }
             if let ringDipPoint = fingers[.ringDIP] {
-              recognizedPoints.append(ringDipPoint)
+              recognizedPoints[index].append(ringDipPoint)
             }
             if let littleDipPoint = fingers[.littleDIP] {
-              recognizedPoints.append(littleDipPoint)
+              recognizedPoints[index].append(littleDipPoint)
             }
           }
+//          try results.forEach { observation in
+//            // 1
+//
+//          }
     
           // 3
-          fingerTips = recognizedPoints.filter {
+          fingerTips[0] = recognizedPoints[0].filter {
+            // Ignore low confidence points.
+            $0.confidence > 0.9
+          }
+          .map {
+            // 4
+            CGPoint(x: $0.location.x, y: 1 - $0.location.y)
+          }
+          
+          fingerTips[1] = recognizedPoints[1].filter {
             // Ignore low confidence points.
             $0.confidence > 0.9
           }

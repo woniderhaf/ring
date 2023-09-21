@@ -6,8 +6,11 @@ import UIKit
 import SwiftUI
 
 final class GameLogicController: ObservableObject {
+  let viewHeight = UIScreen.main.bounds.size.height
+  let viewWidth = UIScreen.main.bounds.size.width
   
- var isStart = true
+  var isStart = false
+  var isAnimation = false
 
   private var goalCount = 0
   
@@ -15,10 +18,12 @@ final class GameLogicController: ObservableObject {
   //  если true  то показываем контур головы
   var isShape:Bool = false
   
+  var isCheckPose = false
+  
   var countCircles = 0
   var activeCircleIndex = 0
   
-  private var coordinateCircles: [CGFloat] = [0,0]
+  private var coordinateCircles: [CGFloat] = [580,240] // start
   
   // квадрат головы
   var positionFace: CGPoint?
@@ -48,11 +53,12 @@ final class GameLogicController: ObservableObject {
   // 4
   var shouldEvaluateResult = true
   
-  
   var startEvade = false
   
-//  var viewsArray = RedCircle().drawCircles(maxCount: Int.random(in: 1...6))
-  var viewsArray = RedCircle().drawCircles(maxCount: 1)
+  var isRender = false
+  
+  var viewsArray = RedCircle().drawCircles(maxCount: Int.random(in: 1...6))
+//  var viewsArray = RedCircle().drawCircles(maxCount: 1)
   
   func updateViewsArray(count:Int) {
     viewsArray = RedCircle().drawCircles(maxCount: count)
@@ -66,15 +72,23 @@ final class GameLogicController: ObservableObject {
   var buttonColor = Color.white
   // 5
   func start() {
-    
     makeItRain = true
-    
-    if(!self.isStart) {
-      self.didRainStars(count: [viewWidth-90,200])
-    }
   }
-  let viewHeight = UIScreen.main.bounds.size.height
-  let viewWidth = UIScreen.main.bounds.size.width
+  
+  
+  func play() {
+    print("start = true")
+    self.isStart = true
+    self.isAnimation = false
+    didRainStars(count: [round(viewsArray[activeCircleIndex].frame.origin.x),round(viewsArray[activeCircleIndex].frame.origin.y)])
+    
+  }
+  
+  func setIsRender() {
+    print("Isrender = true")
+    self.isRender = true
+  }
+
   // 6
   func didRainStars(count: [CGFloat]) {
     coordinateCircles = count
@@ -85,37 +99,43 @@ final class GameLogicController: ObservableObject {
   }
   
   func setActiveIndexCirlce() {
+    print("setActiveIndexCirlce")
     activeCircleIndex += 1
+    if (activeCircleIndex + 1 < viewsArray.count) { 
+      didRainStars(count: [round(viewsArray[activeCircleIndex].frame.origin.x),round(viewsArray[activeCircleIndex].frame.origin.y)])
+    }
   }
   func resetActiveIndexCircle() {
     activeCircleIndex = 0
   }
 
-  
-  func checkStarsCount(_ count: [CGFloat]) {
-    
+  //checkStarsCount
+  func checkStarsCount(_ points: [[CGPoint]]) {
 
-    let x = count[0]
-    let y = count[1]
+    let arrY:[CGFloat] = points[0].map { $0.y }
+    let arrX:[CGFloat] = points[0].map { $0.x }
     
+    let Xmin:CGFloat = arrX.min() ?? 0
+    let Xmax:CGFloat = arrX.max() ?? 0
+    let Ymin:CGFloat = arrY.min() ?? 0
+    let Ymax:CGFloat = arrY.max() ?? 0
+
+  
     
     if !shouldEvaluateResult || countCircles == 0  {
       return
     }
     
     
-    if  x >= (coordinateCircles[0] - 50)
-        && x <= (coordinateCircles[0] + 50)
-        && y >= (coordinateCircles[1] - 50)
-        && y <= (coordinateCircles[1] + 50) {
+    if  Xmin < coordinateCircles[0] && Xmax > coordinateCircles[0] && Ymin < coordinateCircles[1] && Ymax > coordinateCircles[1]
+    {
       
       if !self.isStart {
-        
-        self.isStart = true
+        self.isAnimation = true
       } else {
         
-        
         goalCount += 1
+        
         if countCircles == 0 {
           
           print("count circles == 0")
@@ -143,6 +163,8 @@ final class GameLogicController: ObservableObject {
         }
       }
      
+    } else if !self.isStart {
+      self.isAnimation = false
     }
   }
   

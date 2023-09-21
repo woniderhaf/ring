@@ -6,7 +6,7 @@ import AVFoundation
 struct CameraView: UIViewControllerRepresentable {
   
   
-  var pointsProcessorHandler: (([ CGPoint ]) -> Void )?
+  var pointsProcessorHandler: (([[ CGPoint ]]) -> Void )?
   var pointsProcessorFace: (([Path]) -> Void )?
 
   
@@ -18,7 +18,6 @@ struct CameraView: UIViewControllerRepresentable {
     
     cvc.pointsProcessorHandler = pointsProcessorHandler
     cvc.pointsProcessorFace = pointsProcessorFace
-    
     return cvc
   }
 

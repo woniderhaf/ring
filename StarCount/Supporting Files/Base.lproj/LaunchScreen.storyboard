@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="844" height="390"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="boxing.png" translatesAutoresizingMaskIntoConstraints="NO" id="hiM-e9-H0s">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="boxing" translatesAutoresizingMaskIntoConstraints="NO" id="hiM-e9-H0s">
                                 <rect key="frame" x="302" y="120.66666666666669" width="240" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="128" id="Fcu-cd-u0n"/>
@@ -52,6 +52,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="boxing.png" width="384" height="384"/>
+        <image name="boxing" width="512" height="512"/>
     </resources>
 </document>

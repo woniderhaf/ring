@@ -6,9 +6,6 @@ struct ContentView: View {
   
   @StateObject private var gameLogicController = GameLogicController()
   
-  init() {
-    gameLogicController.start()
-  }
   
   @State  private  var overlayPoints: [ CGPoint ] = []
   
@@ -30,14 +27,6 @@ struct ContentView: View {
   private func show(index: Int) -> some View {
    
     return
-    !gameLogicController.isStart ?
-    Image(systemName: "restart.circle.fill")
-      .resizable()
-      .imageScale(.large)
-      .foregroundColor(Color.white)
-      .frame(width: 50,height: 50)
-      .position(x: viewWidth - 90,y: 200) 
-    :
     gameLogicController.shouldEvaluateResult && !gameLogicController.isShape ?
     Image(systemName: "circle.fill")
       .resizable()
@@ -55,25 +44,15 @@ struct ContentView: View {
    
   }
   
+  
 
   private func showCount(index: Int) -> some View {
     
-    if gameLogicController.isShape {
-      return Image(systemName: "\(gameLogicController.successBadge).circle.fill")
-        .resizable()
-        .imageScale(.large)
-        .foregroundColor(.white)
-        .frame(width: 70, height: 70)
-        .position(x: UIScreen.main.bounds.width/2,y: 50)
-    
-    }
-    gameLogicController.didRainStars(count: [round(gameLogicController.viewsArray[index].frame.origin.x),round(gameLogicController.viewsArray[index].frame.origin.y)])
-    return  Image(systemName: "\(gameLogicController.successBadge).circle.fill")
-      .resizable()
-      .imageScale(.large)
-      .foregroundColor(.white)
-      .frame(width: 70, height: 70)
-      .position(x: UIScreen.main.bounds.width/2,y: 50)
+    var text = Text("\(gameLogicController.successBadge)")
+      .position(x: UIScreen.main.bounds.width/2,y: 30)
+      .font(.system(size: 46,weight: .bold))
+
+    return text
   }
   
   
@@ -82,9 +61,9 @@ struct ContentView: View {
   }
   
   private func showFace() -> some View {
-//    if gameLogicController.startEvade {
-//      gameLogicController.changePositionFace(path: PointsFace?.first ?? Path())
-//    }
+    if gameLogicController.startEvade {
+      gameLogicController.changePositionFace(path: PointsFace?.first ?? Path())
+    }
     if !gameLogicController.isShape {
     } else if gameLogicController.evadePoints.count > 0 && PointsFace?.first?.currentPoint?.x ?? 0 > 0 {
       let currentPoint:CGPoint = PointsFace?.first?.currentPoint ?? CGPoint(x: 0, y: 0)
@@ -132,8 +111,6 @@ struct ContentView: View {
           gameLogicController.successEvadePoint(point: 3)
           
 
-//          gameLogicController.updateViewsArray(count: Int.random(in: 1...6))
-//          gameLogicController.setIsShape()
           if gameLogicController.shouldEvaluateResult {
             gameLogicController.changeSide()
           }
@@ -167,15 +144,17 @@ struct ContentView: View {
   let viewWidth = UIScreen.main.bounds.size.width
   
 
-  
 
   var body: some View {
     
     ZStack {
       CameraView(
         pointsProcessorHandler: { points in
-        gameLogicController.checkStarsCount([ round(points.first?.x ?? 0)  ,round(points.first?.y ?? 0)])
-        
+          
+          if(gameLogicController.isStart) {
+            gameLogicController.checkStarsCount(points)
+          }
+          
       },
         pointsProcessorFace:  {data in
         
@@ -189,14 +168,30 @@ struct ContentView: View {
       showEvadePoint(point: gameLogicController.evadePoints.count > 1 ? gameLogicController.evadePoints[1] : CGPoint(x: 0, y: 0),index: 1)
       showEvadePoint(point: gameLogicController.evadePoints.count > 2 ? gameLogicController.evadePoints[2] : CGPoint(x: 0, y: 0),index: 2)
       showEvadePoint(point: gameLogicController.evadePoints.count > 3 ? gameLogicController.evadePoints[3] : CGPoint(x: 0, y: 0),index: 3)
+      
+      StartAnimate(isStart: $gameLogicController.isStart,isRender: $gameLogicController.isRender, isAnimation: $gameLogicController.isAnimation) {count in
+        
+      } setIsRender: {
+        gameLogicController.setIsRender()
+      } start: {
+        gameLogicController.play()
+      }
+      
     }
     .onAppear {
       gameLogicController.changeCountCircle(gameLogicController.viewsArray.count)
+      gameLogicController.start()
     }
     .overlay(
-      show(index: gameLogicController.activeCircleIndex)
+      gameLogicController.isStart ? show(index: gameLogicController.activeCircleIndex): nil
     )
+    .edgesIgnoringSafeArea(.all)
+
+    
+   
+
   }
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
