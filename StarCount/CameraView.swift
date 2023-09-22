@@ -8,7 +8,7 @@ struct CameraView: UIViewControllerRepresentable {
   
   var pointsProcessorHandler: (([[ CGPoint ]]) -> Void )?
   var pointsProcessorFace: (([Path]) -> Void )?
-
+  var pointsProcessorBody: (([CGPoint]) -> Void )?
   
   // 2
  
@@ -18,6 +18,7 @@ struct CameraView: UIViewControllerRepresentable {
     
     cvc.pointsProcessorHandler = pointsProcessorHandler
     cvc.pointsProcessorFace = pointsProcessorFace
+    cvc.pointsProcessorBody = pointsProcessorBody
     return cvc
   }
 

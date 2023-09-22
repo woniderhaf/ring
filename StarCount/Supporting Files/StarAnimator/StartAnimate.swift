@@ -35,6 +35,10 @@ import SwiftUI
 struct StartAnimate: UIViewRepresentable {
   
   final class Coordinator: NSObject, StartAnimateDelegate {
+    func updateTimerCount(count: Int) {
+      parent.updateTimerCount(count)
+    }
+    
     var parent: StartAnimate
     
  
@@ -56,6 +60,7 @@ struct StartAnimate: UIViewRepresentable {
     func setIsRender() {
       parent.setIsRender()
     }
+    
   }
 
   @Binding var isStart: Bool
@@ -65,6 +70,8 @@ struct StartAnimate: UIViewRepresentable {
   @Binding var isAnimation: Bool
   
   var numberOfStarsHandler: (Int) -> Void
+  
+  var updateTimerCount: (_ count:Int) -> Void
   
   var setIsRender: () -> Void
   
@@ -80,8 +87,10 @@ struct StartAnimate: UIViewRepresentable {
 
   func updateUIView(_ uiView: StarAnimatorView, context: Context) {
     if !isStart && !isRender {
+      print("START RAIN")
       uiView.rain(complection: setIsRender)
     }
+
   }
 
   func makeCoordinator() -> Coordinator {

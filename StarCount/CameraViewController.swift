@@ -101,6 +101,8 @@ import Vision
   var isShare:Bool?
   
   var pointsProcessorFace: (([Path]) -> Void)?
+   
+   var pointsProcessorBody: (([CGPoint]) -> Void)?
   
 
   func processPoints(_ fingerTips: [[CGPoint]]) {
@@ -124,6 +126,7 @@ import Vision
   func processFacePoints(_ faceTips: [Path]) {
     pointsProcessorFace?(faceTips)
   }
+
 
   
 
@@ -149,7 +152,9 @@ import Vision
     try? imageResultHandler.perform([faceDetectionRequest])
   }
   
-  
+   
+
+   
   private func handleFaceDetectionResults(observedFaces: [VNFaceObservation]) {
     clearDrawings()
     
@@ -187,6 +192,7 @@ CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         
         detectFace(image: frame)
+        
         
           var fingerTips: [[CGPoint]] = [[],[]]
           defer {

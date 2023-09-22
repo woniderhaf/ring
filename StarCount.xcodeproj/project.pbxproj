@@ -41,6 +41,7 @@
 		422414BE2A8659A200C8092E /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		422414C02A8659FA00C8092E /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		425D97352A934811006EB617 /* GenerateCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateCircle.swift; sourceTree = "<group>"; };
+		4278005D2ABDB37B000C40DC /* centernet-keypoints.edgem */ = {isa = PBXFileReference; lastKnownFileType = file; name = "centernet-keypoints.edgem"; path = "../../../Downloads/centernet-keypoints.edgem"; sourceTree = "<group>"; };
 		42991BB92A94EE7700CA87FB /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -76,6 +77,7 @@
 		18D775BF22AD944300AE281E /* StarCount */ = {
 			isa = PBXGroup;
 			children = (
+				4278005D2ABDB37B000C40DC /* centernet-keypoints.edgem */,
 				42991BB92A94EE7700CA87FB /* StartView.swift */,
 				425D97352A934811006EB617 /* GenerateCircle.swift */,
 				422414C02A8659FA00C8092E /* CameraView.swift */,

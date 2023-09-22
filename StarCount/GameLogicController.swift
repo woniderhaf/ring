@@ -20,6 +20,7 @@ final class GameLogicController: ObservableObject {
   
   var isCheckPose = false
   
+  
   var countCircles = 0
   var activeCircleIndex = 0
   
@@ -40,9 +41,15 @@ final class GameLogicController: ObservableObject {
   var successPoints: [Int] = []
   var failePoints: [Int] = []
   
-  
-  var sideCount:Int = 0
   // if sideCount = 0 то новые круги,иначе вычисляем
+  var sideCount:Int = 0
+  
+  
+  var timer:Timer = Timer()
+  var timeCount:Int = 0
+  @Published var timeString = ""
+  
+  
 
   // 2
   @Published var makeItRain = false
@@ -79,9 +86,8 @@ final class GameLogicController: ObservableObject {
   func play() {
     print("start = true")
     self.isStart = true
-    self.isAnimation = false
     didRainStars(count: [round(viewsArray[activeCircleIndex].frame.origin.x),round(viewsArray[activeCircleIndex].frame.origin.y)])
-    
+    startTimer()
   }
   
   func setIsRender() {
@@ -92,6 +98,42 @@ final class GameLogicController: ObservableObject {
   // 6
   func didRainStars(count: [CGFloat]) {
     coordinateCircles = count
+  }
+  
+  @objc func countdec() {
+    timeCount -= 1
+    let time = secondsToMinutesSeconds(seconds: timeCount)
+    timeString = makeTimeString(minutes: time.0, seconds: time.1)
+    if (timeCount == 0) {
+      stop()
+    }
+  }
+  
+  func updateTimeCount(count:Int) {
+    timeCount = count
+  }
+  
+  func secondsToMinutesSeconds(seconds:Int) -> (Int,Int) {
+    return ( ((seconds % 3600) / 60), ((seconds % 3600) % 60) )
+  }
+  
+  func makeTimeString(minutes:Int,seconds:Int) -> String {
+    var timeString = ""
+    timeString += String(format: "%02d", minutes)
+    timeString += " : "
+    timeString += String(format: "%02d", seconds)
+    return timeString
+  }
+  
+  func startTimer() {
+    timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector:#selector(countdec) , userInfo: nil, repeats: true)
+  }
+  
+  func stop() {
+    print("STOP!")
+    timer.invalidate()
+    timeString = ""
+    isStart = false
   }
   
   func changeCountCircle(_ count: Int) {

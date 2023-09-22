@@ -10,18 +10,9 @@ struct ContentView: View {
   @State  private  var overlayPoints: [ CGPoint ] = []
   
   @State  private  var PointsFace: [Path]?
+  
   @ViewBuilder
   
-    
-    private func successBadge(number: Int) -> some View {
-      
-      return Image(systemName: "\(number).circle.fill")
-              .resizable()
-              .imageScale(.large)
-              .foregroundColor(.white)
-              .frame(width: 200, height: 200)
-              .shadow(radius: 5)
-    }
   
 
   private func show(index: Int) -> some View {
@@ -60,10 +51,13 @@ struct ContentView: View {
     PointsFace = observedFaces
   }
   
+
+  
   private func showFace() -> some View {
     if gameLogicController.startEvade {
       gameLogicController.changePositionFace(path: PointsFace?.first ?? Path())
     }
+    
     if !gameLogicController.isShape {
     } else if gameLogicController.evadePoints.count > 0 && PointsFace?.first?.currentPoint?.x ?? 0 > 0 {
       let currentPoint:CGPoint = PointsFace?.first?.currentPoint ?? CGPoint(x: 0, y: 0)
@@ -124,8 +118,7 @@ struct ContentView: View {
     return PointsFace?.first?.stroke(Color.red, lineWidth: gameLogicController.isShape ? 2 : 0)
 
   }
-  
-  
+
   
   private func showEvadePoint(point:CGPoint, index: Int) -> some View {
     
@@ -143,8 +136,7 @@ struct ContentView: View {
   let viewHeight = UIScreen.main.bounds.size.height
   let viewWidth = UIScreen.main.bounds.size.width
   
-
-
+  
   var body: some View {
     
     ZStack {
@@ -156,21 +148,27 @@ struct ContentView: View {
           }
           
       },
+
         pointsProcessorFace:  {data in
-        
-        updatePointsFace(observedFaces: data)
-        
+          updatePointsFace(observedFaces: data)
         }
       )
+      
+      // timer
+      Label(gameLogicController.timeString,systemImage: "").font(.largeTitle).position(CGPoint(x: 100, y: 30))
+      
       gameLogicController.isStart  ? showCount(index: gameLogicController.activeCircleIndex) : nil
       showFace()
+      
       showEvadePoint(point: gameLogicController.evadePoints.first ?? CGPoint(x: 0, y: 0),index: 0)
       showEvadePoint(point: gameLogicController.evadePoints.count > 1 ? gameLogicController.evadePoints[1] : CGPoint(x: 0, y: 0),index: 1)
       showEvadePoint(point: gameLogicController.evadePoints.count > 2 ? gameLogicController.evadePoints[2] : CGPoint(x: 0, y: 0),index: 2)
       showEvadePoint(point: gameLogicController.evadePoints.count > 3 ? gameLogicController.evadePoints[3] : CGPoint(x: 0, y: 0),index: 3)
       
-      StartAnimate(isStart: $gameLogicController.isStart,isRender: $gameLogicController.isRender, isAnimation: $gameLogicController.isAnimation) {count in
+      StartAnimate( isStart: $gameLogicController.isStart, isRender: $gameLogicController.isRender, isAnimation: $gameLogicController.isAnimation) {count in
         
+      } updateTimerCount: {count in 
+        gameLogicController.updateTimeCount(count: count)
       } setIsRender: {
         gameLogicController.setIsRender()
       } start: {
