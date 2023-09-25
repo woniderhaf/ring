@@ -2,21 +2,24 @@
 import UIKit
 import SwiftUI
 
-protocol StartAnimateDelegate: class {
+protocol StartAnimateDelegate: AnyObject {
   func didStartRaining(count: Int)
   func start()
   func updateTimerCount(count:Int)
+  func updateSpeed(speed:Double)
+  var isFinish:Bool { get }
 }
 
 
 final class StarAnimatorView: UIView {
   
   
-  var speed:String?
+  var speed:Double?
+  var speedString:String?
   var time: Int?
+  var timeString: String = ""
   
-  
-
+  var isFinish = false
   
   var step: Int = 1 // 1 - speed / 2 - time / 3 - start
   
@@ -25,8 +28,8 @@ final class StarAnimatorView: UIView {
   var activeTime: String?
     
   private enum Constants {
-    static let duration: TimeInterval = 0.7
-    static let delay: TimeInterval = 0.2
+    static let duration: TimeInterval = 0.5
+    static let delay: TimeInterval = 0.1
     static let backgroundAlpha: Double = 0.7
   }
   
@@ -50,6 +53,7 @@ final class StarAnimatorView: UIView {
   let viewTime = UIView()
   let viewStart = UIView()
   let viewBorder = UIView()
+  let viewFinish = UIView()
   
   @objc func animationButtonDown(sender: UIButton) {
     sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
@@ -58,7 +62,26 @@ final class StarAnimatorView: UIView {
   @objc func animationButtonUp(sender: UIButton) {
     
     sender.transform = CGAffineTransform(scaleX: 1, y: 1)
-    self.speed = sender.titleLabel?.text
+    switch sender.titleLabel?.text {
+    case Buttons.fast:
+      self.speed = 1
+      self.delegate?.updateSpeed(speed: 1)
+    case Buttons.slow:
+      self.speed = 1.5
+      self.delegate?.updateSpeed(speed: 1.5)
+    case Buttons.dinamic:
+      self.speed = 0.8
+      self.delegate?.updateSpeed(speed: 0.8)
+    case .none:
+      self.speed = 1
+      self.delegate?.updateSpeed(speed: 1)
+    case .some(_):
+      self.speed = 1
+      self.delegate?.updateSpeed(speed: 1)
+    }
+  
+    
+    self.speedString = sender.titleLabel?.text
    
     
     // анимация ичезновения блока скорости
@@ -77,12 +100,97 @@ final class StarAnimatorView: UIView {
     }
     
     DispatchQueue.main.asyncAfter(deadline: .now() + Constants.duration) {
-
+      
       self.viewSpeed.removeFromSuperview()
      
     }
   }
   
+  
+  func finish(glasses:Int) {
+
+    
+    if (!isFinish) {
+      
+      self.viewFinish.layer.frame = CGRect(x: UIScreen.main.bounds.width/2 - 200, y: UIScreen.main.bounds.height/2 - 150, width: 400, height: 300)
+      self.viewFinish.layer.cornerRadius = 50
+      self.viewFinish.backgroundColor = .white.withAlphaComponent(Constants.backgroundAlpha)
+      self.viewFinish.addSubview(Title(text: "Результат",parent: viewSpeed))
+      self.viewFinish.alpha = 0
+      self.viewFinish.addSubview(Text(text: "Набрано очков: \(glasses)", frame: CGRect(x: 30, y: 50, width: self.viewFinish.bounds.width, height: 40), font: .systemFont(ofSize: 22,weight: .bold), color: .black, textAlignment: .left))
+      self.viewFinish.addSubview(Button(title: "Начать заново", key: 2, parent: self.viewFinish, action: #selector(repeatPlay) ))
+      self.viewFinish.addSubview(Button(title: "Закрыть", key: 3, parent: self.viewFinish, action: #selector(closePlay) ))
+      self.viewFinish.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+      print("add subview")
+      addSubview(viewFinish)
+      UIView.animate(withDuration: Constants.duration, delay: Constants.delay) {
+        self.viewFinish.alpha = 1
+        self.viewFinish.transform = CGAffineTransform(scaleX: 1, y: 1)
+      }
+      isFinish = true
+    }
+    
+  }
+  
+  @objc func repeatPlay() {
+    
+    self.delegate?.updateTimerCount(count: self.time!)
+    self.delegate?.updateSpeed(speed: self.speed!)
+    UIView.animate(withDuration: Constants.duration) {
+      self.viewFinish.alpha = 0
+      self.viewFinish.transform = CGAffineTransform(translationX: -100, y: 0)
+    }
+    
+    self.rootNumber(count: 3)
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+      self.rootNumber(count: 2)
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+      self.rootNumber(count: 1)
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+      self.viewFinish.transform = CGAffineTransform(translationX: 0, y: 0)
+      print("remove viewFinish")
+      self.viewFinish.subviews.map {
+        $0.removeFromSuperview()
+      }
+      self.viewFinish.removeFromSuperview()
+     
+      self.delegate?.start()
+      self.isFinish = false
+      
+    }
+   
+
+  }
+  
+  @objc func closePlay() {
+    print("close play")
+//    self.viewStart.removeFromSuperview()
+//    self.viewStart.subviews.forEach{$0.removeFromSuperview()}
+//    self.viewSpeed.removeFromSuperview()
+//    self.viewSpeed.subviews.forEach{$0.removeFromSuperview()}
+//    self.viewTime.removeFromSuperview()
+//    self.viewTime.subviews.forEach{$0.removeFromSuperview()}
+//    blockTime()
+//    blockSpeed()
+//    blockStart()
+    self.viewFinish.removeFromSuperview()
+    UIView.animate(withDuration: Constants.duration) {
+      self.viewFinish.alpha = 0
+      self.viewFinish.transform = CGAffineTransform(translationX: -100, y: 0)
+    }
+    self.viewSpeed.transform = CGAffineTransform(translationX: 0, y: 0)
+    self.viewSpeed.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+    self.viewSpeed.alpha = 0
+    addSubview(self.viewSpeed)
+    UIView.animate(withDuration: Constants.duration,delay: Constants.delay) {
+      self.viewSpeed.alpha = 1
+      self.viewSpeed.transform = CGAffineTransform(scaleX: 1, y: 1)
+      
+    }
+    
+  }
 
   
   func labelCount(count:Int) -> UILabel {
@@ -118,12 +226,12 @@ final class StarAnimatorView: UIView {
 
     self.addSubview(view)
     
-    UIView.animate(withDuration: 3) {
+    UIView.animate(withDuration: 2) {
       let scale = 4.0
       label.alpha = 1
       label.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
-    UIView.animate(withDuration: 2,delay: 2) {
+    UIView.animate(withDuration: 1,delay: 1) {
       label.alpha = 0
     }
   }
@@ -139,8 +247,9 @@ final class StarAnimatorView: UIView {
     }
     
     
-    var speed = blockSpeed()
-    var time = blockTime()
+    let speed = blockSpeed()
+    blockTime()
+    
     
     
     addSubview(speed)
@@ -198,6 +307,7 @@ final class StarAnimatorView: UIView {
     return viewTime
   }
   
+  
   func blockStart() -> UIView {
     
 
@@ -208,14 +318,14 @@ final class StarAnimatorView: UIView {
     viewStart.backgroundColor = .white.withAlphaComponent(Constants.backgroundAlpha)
     viewStart.addSubview(Title(text: "Можем начинать",parent: viewStart))
     
-    viewStart.addSubview(Text(text: "Скорость: \(self.speed!)",
+    viewStart.addSubview(Text(text: "Скорость: \(self.speedString!)",
                               frame: CGRect(x: 20, y: 80, width: 300, height: 30),
                               font: .systemFont(ofSize: 20),
                               color: .black,
                               textAlignment: .left
                              ))
 
-    viewStart.addSubview(Text(text: "Время: \(self.time!)",
+    viewStart.addSubview(Text(text: "Время: \(self.timeString)",
                               frame: CGRect(x: 20, y: 120, width: 300, height: 30),
                               font: .systemFont(ofSize: 20),
                               color: .black,
@@ -223,6 +333,7 @@ final class StarAnimatorView: UIView {
                              ))
     
     viewStart.addSubview(Button(title: "Старт",key: 3,parent: viewStart,action: #selector(Start)))
+    viewStart.addSubview(BackButton(parent: viewStart))
     viewStart.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
     return viewStart
   }
@@ -290,9 +401,9 @@ final class StarAnimatorView: UIView {
   
   func BackButton(parent:UIView) -> UIButton {
     
-    var button = UIButton()
+    let button = UIButton()
     let configuration = UIImage.SymbolConfiguration(pointSize: 50)
-    var image = UIImage(systemName: "arrowshape.backward.circle",withConfiguration: configuration)
+    let image = UIImage(systemName: "arrowshape.backward.circle",withConfiguration: configuration)
     
     button.tintColor = .gray
     button.setImage(image, for: .normal)
@@ -304,29 +415,60 @@ final class StarAnimatorView: UIView {
   
   @objc func BackAction(sender:UIButton) {
     
-    self.viewSpeed.alpha = 0
-    self.viewSpeed.transform = CGAffineTransform(translationX: -100, y: 0)
-    addSubview(self.viewSpeed)
-    // анимация ичезновения блока времени
-    UIView.animate(withDuration: Constants.duration) {
+    if step == 2 {
+      self.viewSpeed.alpha = 0
+      self.viewSpeed.transform = CGAffineTransform(translationX: -100, y: 0)
+      addSubview(self.viewSpeed)
+      // анимация ичезновения блока времени
+      UIView.animate(withDuration: Constants.duration) {
+        
+        self.viewTime.alpha = 0
+        self.viewTime.transform = CGAffineTransform(scaleX: 0.8,y: 0.8)
+        
+      }
+      // анимация появления блока скорости ( возвращение )
+      UIView.animate(withDuration: Constants.duration, delay:Constants.delay) {
+        self.viewSpeed.alpha = 1
+        self.viewSpeed.transform = CGAffineTransform(translationX: 0,y: 0)
+        
+      }
       
+      DispatchQueue.main.asyncAfter(deadline: .now() + Constants.duration) {
+        
+        self.viewTime.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        
+        self.viewTime.removeFromSuperview()
+        self.step = 1
+      }
+    } else if step == 3 {
+      // возвращаем блок времени
       self.viewTime.alpha = 0
-      self.viewTime.transform = CGAffineTransform(scaleX: 0.8,y: 0.8)
+      self.viewTime.transform = CGAffineTransform(translationX: -100, y: 0)
+      addSubview(self.viewTime)
+      // анимация ичезновения блока старта
+      UIView.animate(withDuration: Constants.duration) {
+        
+        self.viewStart.alpha = 0
+        self.viewStart.transform = CGAffineTransform(scaleX: 0.8,y: 0.8)
+        
+      }
+      // анимация появления блока времени
+      UIView.animate(withDuration: Constants.duration, delay:Constants.delay) {
+        self.viewTime.alpha = 1
+        self.viewTime.transform = CGAffineTransform(translationX: 0,y: 0)
+        
+      }
       
-    }
-    // анимация появления блока скорости ( возвращение )
-    UIView.animate(withDuration: Constants.duration, delay:Constants.delay) {
-      self.viewSpeed.alpha = 1
-      self.viewSpeed.transform = CGAffineTransform(translationX: 0,y: 0)
-      
+      DispatchQueue.main.asyncAfter(deadline: .now() + Constants.duration) {
+        print("delete view start ")
+        self.viewStart.transform = CGAffineTransform(scaleX: 1, y: 1)
+        self.viewStart.subviews.forEach {$0.removeFromSuperview()}
+        self.viewStart.removeFromSuperview()
+        self.step = 2
+      }
     }
     
-    DispatchQueue.main.asyncAfter(deadline: .now() + Constants.duration) {
-      print("delete view time")
-      self.viewTime.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-      self.viewTime.removeFromSuperview()
-      
-    }
+   
   }
   
   @objc func SelectedTime(sender: UIButton) {
@@ -336,10 +478,13 @@ final class StarAnimatorView: UIView {
     switch sender.titleLabel?.text {
     case Buttons.short:
       self.time = 60
+      self.timeString = Buttons.short
     case Buttons.average:
       self.time = 120
+      self.timeString = Buttons.average
     case Buttons.long:
       self.time = 180
+      self.timeString = Buttons.long
     case .none:
       print("none")
     case .some(_):
@@ -365,7 +510,9 @@ final class StarAnimatorView: UIView {
     
     DispatchQueue.main.asyncAfter(deadline: .now() + Constants.duration) {
       print("delete view time")
+      
       self.viewTime.removeFromSuperview()
+      
     }
 
     
@@ -378,31 +525,31 @@ final class StarAnimatorView: UIView {
       self.viewStart.alpha = 0
       self.viewStart.transform = CGAffineTransform(translationX: -100, y: 0)
     }
-    UIView.animate(withDuration: 2, delay: 2) {
-      self.blurEffectViewLeft.transform = CGAffineTransform(translationX: UIScreen.main.bounds.width/2, y: 0)
-      self.blurEffectViewRight.transform = CGAffineTransform(translationX: -UIScreen.main.bounds.width/2, y: 0)
-    }
+//    UIView.animate(withDuration: 2, delay: 2) {
+//      self.blurEffectViewLeft.transform = CGAffineTransform(translationX: UIScreen.main.bounds.width/2, y: 0)
+//      self.blurEffectViewRight.transform = CGAffineTransform(translationX: -UIScreen.main.bounds.width/2, y: 0)
+//    }
     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+      self.viewStart.subviews.forEach { $0.removeFromSuperview()}
+      self.viewFinish.subviews.forEach { $0.removeFromSuperview()}
       self.viewStart.removeFromSuperview()
+      self.viewFinish.removeFromSuperview()
     }
     self.rootNumber(count: 3)
-    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
       self.rootNumber(count: 2)
     }
-    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
       self.rootNumber(count: 1)
     }
-    DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
       self.delegate?.start()
-      
+      self.isFinish = false
     }
     
-    
-
-    // сл шаг
-//    self.step = 3
-    
   }
+  
+  
   
   //end
 }

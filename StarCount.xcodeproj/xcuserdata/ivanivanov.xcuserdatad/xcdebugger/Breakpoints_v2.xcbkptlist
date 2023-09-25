@@ -3,4 +3,100 @@
    uuid = "E6B48CC0-A673-4945-A2CB-F16769A32FE5"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "82CD2F4C-52B1-42B7-9B99-F7B022C36446"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StarCount/Supporting Files/StarAnimator/StartAnimateView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "137"
+            endingLineNumber = "137"
+            landmarkName = "repeatPlay()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "82CD2F4C-52B1-42B7-9B99-F7B022C36446 - 9b6b42c43cf76d96"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "&#x425;&#x41e;&#x427;&#x423;_&#x411;&#x41e;&#x41a;&#x421;.StarAnimatorView.repeatPlay() -&gt; ()"
+                  moduleName = "&#x425;&#x41e;&#x427;&#x423;!&#x411;&#x41e;&#x41a;&#x421;"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ivanivanov/Desktop/ring/StarCount/Supporting%20Files/StarAnimator/StartAnimateView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "115"
+                  endingLineNumber = "115"
+                  offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  uuid = "82CD2F4C-52B1-42B7-9B99-F7B022C36446 - 9b6b42c43cf76d96"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "&#x425;&#x41e;&#x427;&#x423;_&#x411;&#x41e;&#x41a;&#x421;.StarAnimatorView.repeatPlay() -&gt; ()"
+                  moduleName = "&#x425;&#x41e;&#x427;&#x423;!&#x411;&#x41e;&#x41a;&#x421;"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ivanivanov/Desktop/ring/StarCount/Supporting%20Files/StarAnimator/StartAnimateView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "115"
+                  endingLineNumber = "115"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  uuid = "82CD2F4C-52B1-42B7-9B99-F7B022C36446 - 9b6b42c43cf76d96"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "&#x425;&#x41e;&#x427;&#x423;_&#x411;&#x41e;&#x41a;&#x421;.StarAnimatorView.repeatPlay() -&gt; ()"
+                  moduleName = "&#x425;&#x41e;&#x427;&#x423;!&#x411;&#x41e;&#x41a;&#x421;"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ivanivanov/Desktop/ring/StarCount/Supporting%20Files/StarAnimator/StartAnimateView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "115"
+                  endingLineNumber = "115"
+                  offsetFromSymbolStart = "328">
+               </Location>
+               <Location
+                  uuid = "82CD2F4C-52B1-42B7-9B99-F7B022C36446 - 9b6b42c43cf76d96"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "&#x425;&#x41e;&#x427;&#x423;_&#x411;&#x41e;&#x41a;&#x421;.StarAnimatorView.repeatPlay() -&gt; ()"
+                  moduleName = "&#x425;&#x41e;&#x427;&#x423;!&#x411;&#x41e;&#x41a;&#x421;"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ivanivanov/Desktop/ring/StarCount/Supporting%20Files/StarAnimator/StartAnimateView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "115"
+                  endingLineNumber = "115"
+                  offsetFromSymbolStart = "556">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C9BABEC6-438F-4435-9455-1805B03C51A7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StarCount/Supporting Files/StarAnimator/StartAnimateView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "552"
+            endingLineNumber = "552"
+            landmarkName = "StarAnimatorView"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

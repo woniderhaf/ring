@@ -35,6 +35,13 @@ import SwiftUI
 struct StartAnimate: UIViewRepresentable {
   
   final class Coordinator: NSObject, StartAnimateDelegate {
+    func updateSpeed(speed: Double) {
+      parent.updateSpeed(speed)
+    }
+    
+    
+    var isFinish: Bool
+    
     func updateTimerCount(count: Int) {
       parent.updateTimerCount(count)
     }
@@ -45,6 +52,7 @@ struct StartAnimate: UIViewRepresentable {
 
     init(_ parent: StartAnimate) {
       self.parent = parent
+      self.isFinish  = parent.isFinish
       
     }
 
@@ -61,6 +69,7 @@ struct StartAnimate: UIViewRepresentable {
       parent.setIsRender()
     }
     
+    
   }
 
   @Binding var isStart: Bool
@@ -68,6 +77,12 @@ struct StartAnimate: UIViewRepresentable {
   @Binding var isRender: Bool
   
   @Binding var isAnimation: Bool
+  
+  @Binding var isFinish: Bool
+  
+  @Binding var glasses: Int
+  
+  var updateSpeed:(_ speed:Double) -> Void
   
   var numberOfStarsHandler: (Int) -> Void
   
@@ -89,6 +104,10 @@ struct StartAnimate: UIViewRepresentable {
     if !isStart && !isRender {
       print("START RAIN")
       uiView.rain(complection: setIsRender)
+    }
+    if isFinish {
+      
+      uiView.finish(glasses:glasses)
     }
 
   }

@@ -10,6 +10,7 @@ final class GameLogicController: ObservableObject {
   let viewWidth = UIScreen.main.bounds.size.width
   
   var isStart = false
+  var isFinish = false
   var isAnimation = false
 
   private var goalCount = 0
@@ -24,7 +25,7 @@ final class GameLogicController: ObservableObject {
   var countCircles = 0
   var activeCircleIndex = 0
   
-  private var coordinateCircles: [CGFloat] = [580,240] // start
+  private var coordinateCircles: [CGFloat] = [500,500] // start
   
   // квадрат головы
   var positionFace: CGPoint?
@@ -55,7 +56,9 @@ final class GameLogicController: ObservableObject {
   @Published var makeItRain = false
 
   // 3
-  @Published private(set) var successBadge: Int = 0
+  @Published var successBadge: Int = 0
+  
+  @Published var speed: Double = 1.5
 
   // 4
   var shouldEvaluateResult = true
@@ -65,7 +68,7 @@ final class GameLogicController: ObservableObject {
   var isRender = false
   
   var viewsArray = RedCircle().drawCircles(maxCount: Int.random(in: 1...6))
-//  var viewsArray = RedCircle().drawCircles(maxCount: 1)
+//  var viewsArray = RedCircle().drawCircles(maxCount: 50)
   
   func updateViewsArray(count:Int) {
     viewsArray = RedCircle().drawCircles(maxCount: count)
@@ -86,8 +89,16 @@ final class GameLogicController: ObservableObject {
   func play() {
     print("start = true")
     self.isStart = true
+    self.successBadge = 0
+    self.goalCount = 0
+    self.isFinish = false
     didRainStars(count: [round(viewsArray[activeCircleIndex].frame.origin.x),round(viewsArray[activeCircleIndex].frame.origin.y)])
     startTimer()
+  }
+  
+  func updateSpeed(speed:Double) {
+    print("update speed")
+    self.speed = speed
   }
   
   func setIsRender() {
@@ -97,6 +108,7 @@ final class GameLogicController: ObservableObject {
 
   // 6
   func didRainStars(count: [CGFloat]) {
+    
     coordinateCircles = count
   }
   
@@ -134,6 +146,7 @@ final class GameLogicController: ObservableObject {
     timer.invalidate()
     timeString = ""
     isStart = false
+    isFinish = true
   }
   
   func changeCountCircle(_ count: Int) {
@@ -152,15 +165,32 @@ final class GameLogicController: ObservableObject {
   }
 
   //checkStarsCount
+  let radius = 50.0
   func checkStarsCount(_ points: [[CGPoint]]) {
 
-    let arrY:[CGFloat] = points[0].map { $0.y }
-    let arrX:[CGFloat] = points[0].map { $0.x }
-    
-    let Xmin:CGFloat = arrX.min() ?? 0
-    let Xmax:CGFloat = arrX.max() ?? 0
-    let Ymin:CGFloat = arrY.min() ?? 0
-    let Ymax:CGFloat = arrY.max() ?? 0
+    var res = false
+    points.forEach {
+      $0.forEach{
+        if ($0.x - coordinateCircles[0] < radius && $0.x - coordinateCircles[0] > 0 && $0.y - coordinateCircles[1]  > 0 && $0.y - coordinateCircles[1] < radius) {
+          res = true
+        }
+      }
+    }
+//    
+//    var arrY0:[CGFloat] = points[0].map { $0.y }
+//    var arrX0:[CGFloat] = points[0].map { $0.x }
+//
+//    var arrY1:[CGFloat] = points[1].map { $0.y }
+//    var arrX1:[CGFloat] = points[1].map { $0.x }
+//    
+//    
+//    var arrY:[CGFloat] = arrY0 + arrY1
+//    var arrX:[CGFloat] = arrX0 + arrX1
+//    
+//    let Xmin:CGFloat = arrX.min() ?? 0
+//    let Xmax:CGFloat = arrX.max() ?? 0
+//    let Ymin:CGFloat = arrY.min() ?? 0
+//    let Ymax:CGFloat = arrY.max() ?? 0
 
   
     
@@ -169,7 +199,8 @@ final class GameLogicController: ObservableObject {
     }
     
     
-    if  Xmin < coordinateCircles[0] && Xmax > coordinateCircles[0] && Ymin < coordinateCircles[1] && Ymax > coordinateCircles[1]
+//    if  Xmin < coordinateCircles[0] && Xmax > coordinateCircles[0] && Ymin < coordinateCircles[1] && Ymax > coordinateCircles[1]
+    if res
     {
       
       if !self.isStart {
@@ -285,7 +316,21 @@ final class GameLogicController: ObservableObject {
     
   }
 
+  func passCircle() {
+    if countCircles == 1 {
+      isShape = true
+      self.randomSideCount()
+      resetActiveIndexCircle()
+      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        self.startEvade = true
+      }
+      
+    }
+    changeCountCircle(countCircles - 1)
+    setActiveIndexCirlce()
+    
+  }
   
   
-
+//end
 }

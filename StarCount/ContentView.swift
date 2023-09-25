@@ -6,40 +6,18 @@ struct ContentView: View {
   
   @StateObject private var gameLogicController = GameLogicController()
   
-  
   @State  private  var overlayPoints: [ CGPoint ] = []
   
   @State  private  var PointsFace: [Path]?
-  
-  @ViewBuilder
+
   
   
 
-  private func show(index: Int) -> some View {
-   
-    return
-    gameLogicController.shouldEvaluateResult && !gameLogicController.isShape ?
-    Image(systemName: "circle.fill")
-      .resizable()
-      .imageScale(.large)
-      .foregroundColor(.red)
-      .frame(width: 50, height: 50)
-      .position(x: gameLogicController.viewsArray[index].frame.origin.x,y: gameLogicController.viewsArray[index].frame.origin.y)
-    :
-    Image(systemName: "circle.fill")
-      .resizable()
-      .imageScale(.large)
-      .foregroundColor(.red)
-      .frame(width: 0, height: 0)
-      .position(x: 0,y: 0)
-   
-  }
-  
   
 
   private func showCount(index: Int) -> some View {
     
-    var text = Text("\(gameLogicController.successBadge)")
+    let text = Text("\(gameLogicController.successBadge)")
       .position(x: UIScreen.main.bounds.width/2,y: 30)
       .font(.system(size: 46,weight: .bold))
 
@@ -140,6 +118,8 @@ struct ContentView: View {
   var body: some View {
     
     ZStack {
+      
+ 
       CameraView(
         pointsProcessorHandler: { points in
           
@@ -165,9 +145,17 @@ struct ContentView: View {
       showEvadePoint(point: gameLogicController.evadePoints.count > 2 ? gameLogicController.evadePoints[2] : CGPoint(x: 0, y: 0),index: 2)
       showEvadePoint(point: gameLogicController.evadePoints.count > 3 ? gameLogicController.evadePoints[3] : CGPoint(x: 0, y: 0),index: 3)
       
-      StartAnimate( isStart: $gameLogicController.isStart, isRender: $gameLogicController.isRender, isAnimation: $gameLogicController.isAnimation) {count in
+      StartAnimate(
+        isStart: $gameLogicController.isStart,
+        isRender: $gameLogicController.isRender,
+        isAnimation: $gameLogicController.isAnimation,
+        isFinish: $gameLogicController.isFinish,
+        glasses: $gameLogicController.successBadge
+      ) {count in
+        gameLogicController.updateSpeed(speed: count)
+      } numberOfStarsHandler: { number in
         
-      } updateTimerCount: {count in 
+      } updateTimerCount: {count in
         gameLogicController.updateTimeCount(count: count)
       } setIsRender: {
         gameLogicController.setIsRender()
@@ -175,14 +163,24 @@ struct ContentView: View {
         gameLogicController.play()
       }
       
+      ForEach(0 ..<  50) { i in
+        
+        gameLogicController.isStart && gameLogicController.activeCircleIndex == i && gameLogicController.countCircles > 0 ? RingAnimation(complection: gameLogicController.passCircle, arrayCircle: gameLogicController.viewsArray[i],activeIndex: gameLogicController.activeCircleIndex,index: i, speed: gameLogicController.speed) : nil
+      }
+      
+      
     }
     .onAppear {
       gameLogicController.changeCountCircle(gameLogicController.viewsArray.count)
       gameLogicController.start()
+      
+      
     }
-    .overlay(
-      gameLogicController.isStart ? show(index: gameLogicController.activeCircleIndex): nil
-    )
+//    .overlay(
+//      gameLogicController.isStart
+//      ? RingAnimation(complection: gameLogicController.passCircle, arrayCircles: gameLogicController.viewsArray,activeIndex: gameLogicController.activeCircleIndex, speed: gameLogicController.speed)
+//      : nil
+//    )
     .edgesIgnoringSafeArea(.all)
 
     
@@ -192,8 +190,3 @@ struct ContentView: View {
     
 }
 
-struct ContentView_Previews: PreviewProvider {
-  static var previews: some View {
-    ContentView()
-  }
-}

@@ -21,6 +21,7 @@
 		422414BF2A8659A200C8092E /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422414BE2A8659A200C8092E /* CameraViewController.swift */; };
 		422414C12A8659FA00C8092E /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422414C02A8659FA00C8092E /* CameraView.swift */; };
 		425D97362A934811006EB617 /* GenerateCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425D97352A934811006EB617 /* GenerateCircle.swift */; };
+		427506CC2ABECAE800DEC3CC /* RingAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427506CB2ABECAE800DEC3CC /* RingAnimation.swift */; };
 		42991BBA2A94EE7700CA87FB /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42991BB92A94EE7700CA87FB /* StartView.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,7 +42,7 @@
 		422414BE2A8659A200C8092E /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		422414C02A8659FA00C8092E /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		425D97352A934811006EB617 /* GenerateCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateCircle.swift; sourceTree = "<group>"; };
-		4278005D2ABDB37B000C40DC /* centernet-keypoints.edgem */ = {isa = PBXFileReference; lastKnownFileType = file; name = "centernet-keypoints.edgem"; path = "../../../Downloads/centernet-keypoints.edgem"; sourceTree = "<group>"; };
+		427506CB2ABECAE800DEC3CC /* RingAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingAnimation.swift; sourceTree = "<group>"; };
 		42991BB92A94EE7700CA87FB /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -77,7 +78,6 @@
 		18D775BF22AD944300AE281E /* StarCount */ = {
 			isa = PBXGroup;
 			children = (
-				4278005D2ABDB37B000C40DC /* centernet-keypoints.edgem */,
 				42991BB92A94EE7700CA87FB /* StartView.swift */,
 				425D97352A934811006EB617 /* GenerateCircle.swift */,
 				422414C02A8659FA00C8092E /* CameraView.swift */,
@@ -89,6 +89,7 @@
 				308D74B025878AC400A39EB8 /* GameLogicController.swift */,
 				308D74B42587B10800A39EB8 /* Supporting Files */,
 				18D775C822AD944400AE281E /* Preview Content */,
+				427506CB2ABECAE800DEC3CC /* RingAnimation.swift */,
 			);
 			path = StarCount;
 			sourceTree = "<group>";
@@ -223,6 +224,7 @@
 				422414C12A8659FA00C8092E /* CameraView.swift in Sources */,
 				304BEFCC258628F800CED98D /* AppError.swift in Sources */,
 				301202F0258528A7007B2E1B /* StartAnimateView.swift in Sources */,
+				427506CC2ABECAE800DEC3CC /* RingAnimation.swift in Sources */,
 				308D74B125878AC400A39EB8 /* GameLogicController.swift in Sources */,
 				303C3F292584A63500CA22F3 /* StartAnimate.swift in Sources */,
 				185A48EC25DC2DF1008592C9 /* FingersOverlay.swift in Sources */,

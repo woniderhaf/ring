@@ -1,7 +1,9 @@
 import UIKit
+import SwiftUI
 
 
 class RedCircle {
+  
   func drawCircles(maxCount: Int) -> [UIView] {
     var number = 1
 //    var maxCount = 5
@@ -16,12 +18,12 @@ class RedCircle {
       let rectSideSize: CGFloat = 50
       
       //3. Два рандомных числа
-      let randomNumberOne = CGFloat.random(in: viewWidth*0.2...viewWidth*0.8)//CGFloat(arc4random_uniform(40))
-      let randomNumberTwo = CGFloat.random(in: 100...viewHeight*0.3)//CGFloat(arc4random_uniform(20))
+      let x = CGFloat.random(in: viewWidth*0.2...viewWidth*0.8)//CGFloat(arc4random_uniform(40))
+      let y = CGFloat.random(in: 100...viewHeight*0.3)//CGFloat(arc4random_uniform(20))
 
       //4. Координаты и размеры круга
-      let rect = CGRect(x:  randomNumberOne,
-                        y:  randomNumberTwo,
+      let rect = CGRect(x:  x,
+                        y:  y,
                         width: rectSideSize,
                         height: rectSideSize)
       
@@ -32,7 +34,7 @@ class RedCircle {
       //6. Задаём цвет и делаем обрезку
       newView.layer.cornerRadius = rectSideSize/2
       newView.layer.masksToBounds = true
-      newView.backgroundColor = #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1)
+      
       
       //7. Добавляем в массив
       viewsArray.append(newView)
